@@ -57,14 +57,14 @@ def get_all_expenses(
     return JSONResponse(content=list(expenses.values()), status_code=status.HTTP_200_OK)
 
 @app.get("/expenses/{item_id}")
-def get_expense_id(item_id : int = Path(alias="expense id",description="ID of the expense to get",ge=1)):
+def get_expense_id(item_id : int = Path(description="ID of the expense to get",ge=1)):
     expense = expenses.get(item_id)
     if expense:
         return JSONResponse(content=expense, status_code=status.HTTP_200_OK)
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Expense not found")
 
-@app.put("/names/{item_id}")
-def update_expense(item_id : int = Path(alias="expense id", description="ID of the expense to update"),
+@app.put("/expenses/{item_id}")
+def update_expense(item_id : int = Path(description="ID of the expense to update"),
                     description: Annotated[Optional[str], Body(max_length=100, description="New description")] = None,
                     amount: Annotated[Optional[float], Body(description="New amount")] = None):
     expense = expenses.get(item_id)
@@ -80,7 +80,7 @@ def update_expense(item_id : int = Path(alias="expense id", description="ID of t
     return JSONResponse(content=expense, status_code=status.HTTP_200_OK)
 
 @app.delete("/expenses/{item_id}")
-def delete_expense_id(item_id : int = Path(alias="expense id",description="ID of the expense to delete",ge=1)):
+def delete_expense_id(item_id : int = Path(description="ID of the expense to delete",ge=1)):
     expense = expenses.get(item_id)
     if expense:
         expenses.pop(item_id)
